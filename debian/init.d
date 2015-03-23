@@ -69,10 +69,10 @@ NUMACTL_ARGS="--interleave=all"
 if which numactl >/dev/null 2>/dev/null && numactl $NUMACTL_ARGS ls / >/dev/null 2>/dev/null
 then
     NUMACTL="`which numactl` -- $NUMACTL_ARGS"
-    DAEMON_OPTS=${DAEMON_OPTS:-"--config $CONF"}
+    DAEMON_OPTS=${DAEMON_OPTS:-"--auth --config $CONF"}
 else
     NUMACTL=""
-    DAEMON_OPTS="-- "${DAEMON_OPTS:-"--config $CONF"}
+    DAEMON_OPTS="-- "${DAEMON_OPTS:-"--auth --config $CONF"}
 fi
 
 if test ! -x $DAEMON; then
@@ -157,7 +157,6 @@ force_stop() {
 	rm -f $PIDFILE
 }
 
-
 case "$1" in
   start)
 	log_daemon_msg "Starting $DESC" "$NAME"
@@ -173,6 +172,10 @@ case "$1" in
             # to a reasonable value
             [ -n "$STARTTIME" ] && sleep $STARTTIME # Wait some time 
             if  running ;  then
+		if [ ! -f /var/lib/mongo/admin.0 ] ; then
+		  sleep 20
+		  mongo --eval 'db.addUser("admin","mongoadmin1")' admin > /dev/null || echo 
+		fi
                 # It's ok, the server started and is running
                 log_end_msg 0
             else
