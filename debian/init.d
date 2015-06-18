@@ -172,7 +172,7 @@ case "$1" in
             # to a reasonable value
             [ -n "$STARTTIME" ] && sleep $STARTTIME # Wait some time 
             if  running ;  then
-		if [ ! -f /var/lib/mongo/admin.0 ] ; then
+		if [ ! -f /var/lib/mongodb/admin.0 ] ; then
 		  sleep 20
 		  mongo --eval 'db.addUser("admin","mongoadmin1")' admin > /dev/null || echo 
 		fi
