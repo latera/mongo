@@ -231,7 +231,7 @@ add_option("mongod-concurrency-level", "Concurrency level, \"global\" or \"db\""
 add_option('client-dist-basename', "Name of the client source archive.", 1, False,
            default='mongo-cxx-driver')
 
-add_option('disable-warnings-as-errors', "Don't add -Werror to compiler command line", 0, False)
+add_option('disable-warnings-as-errors', "Don't add -Werror to compiler command line", 1, True)
 
 # don't run configure if user calls --help
 if GetOption('help'):
@@ -706,6 +706,8 @@ if nix:
                          "-fno-strict-aliasing",
                          "-ggdb",
                          "-pthread",
+                         "-Wno-unused-local-typedefs",
+                         "-Wno-unused-function",
                          "-Wall",
                          "-Wsign-compare",
                          "-Wno-unknown-pragmas",
